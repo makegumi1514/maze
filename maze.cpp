@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 void createMaze(int x, int y, int **maze, int type);
@@ -42,11 +43,15 @@ int main(){
 }
 
 void createMaze(int x, int y, int **maze, int type){
+	srand((unsigned)time(NULL));
+
 	bool stop = true;
+	bool stop_wall = false;
 	bool farst = true;
 	bool end = false;
-	int curentX, curentY, random, stopCount;
-	curentX = curentY = random = stopCount = 0;
+	bool select = false;
+	int currentX, currentY, random, stopCount;
+	currentX = currentY = random = stopCount = 0;
 	switch (type){
 	case 0:
 		/*ñ_ì|Çµñ@*/
@@ -107,9 +112,9 @@ void createMaze(int x, int y, int **maze, int type){
 		//ñ¿òHÇÃçÏê¨
 		while (!end){
 			if (farst){
-				curentY = rand() % y;
-				curentX = rand() % x;
-				maze[curentY][curentX] = 0;
+				currentY = rand() % y;
+				currentX = rand() % x;
+				maze[currentY][currentX] = 0;
 				farst = false;
 			}
 			else if (stop){
@@ -117,29 +122,29 @@ void createMaze(int x, int y, int **maze, int type){
 					for (int j = 0; j < x; j++){
 						if (maze[i][j] == 0){
 							stop = false;
-							curentY = i;
-							curentX = j;
+							currentY = i;
+							currentX = j;
 						}
 					}
 				}
 			}
 			else{
 				random = rand();
-				if (random % 4 == 0 && maze[curentY - 2][curentX] != 0){
-					maze[curentY - 2][curentX] = maze[curentY - 1][curentX] = 0;
-					curentY -= 2;
+				if (random % 4 == 0 && maze[currentY - 2][currentX] != 0){
+					maze[currentY - 2][currentX] = maze[currentY - 1][currentX] = 0;
+					currentY -= 2;
 				}
-				else if (random % 4 == 1 && maze[curentY + 2][curentX] != 0){
-					maze[curentY + 2][curentX] = maze[curentY + 1][curentX] = 0;
-					curentY += 2;
+				else if (random % 4 == 1 && maze[currentY + 2][currentX] != 0){
+					maze[currentY + 2][currentX] = maze[currentY + 1][currentX] = 0;
+					currentY += 2;
 				}
-				else if (random % 4 == 2 && maze[curentY][curentX - 2] != 0){
-					maze[curentY][curentX - 2] = maze[curentY][curentX - 1] = 0;
-					curentX -= 2;
+				else if (random % 4 == 2 && maze[currentY][currentX - 2] != 0){
+					maze[currentY][currentX - 2] = maze[currentY][currentX - 1] = 0;
+					currentX -= 2;
 				}
-				else if (random % 4 == 3 && maze[curentY][curentX + 2] != 0){
-					maze[curentY][curentX + 2] = maze[curentY][curentX + 1] = 0;
-					curentX += 2;
+				else if (random % 4 == 3 && maze[currentY][currentX + 2] != 0){
+					maze[currentY][currentX + 2] = maze[currentY][currentX + 1] = 0;
+					currentX += 2;
 				}
 				else stop = true;
 			}
@@ -156,35 +161,70 @@ void createMaze(int x, int y, int **maze, int type){
 			}
 		}
 		//ñ¿òHÇÃçÏê¨
-		while (stopCount < 1000){
-			if (stop){
-				random = rand();
-				if (random % 4 == 0) curentY = 0, curentX = (rand() % (x / 2)) * 2;				//è„ÇÃï«Ç©ÇÁêLÇŒÇ∑
-				else if (random % 4 == 1) curentY = y - 1, curentX = (rand() % (x / 2)) * 2;	//â∫ÇÃï«
-				else if (random % 4 == 2) curentY = (rand() % (y / 2)) * 2, curentX = 0;		//ç∂ÇÃï«
-				else if (random % 4 == 3) curentY = (rand() % (y / 2)) * 2, curentX = x - 1;	//âEÇÃï«
-				stop = false;
-				stopCount++;
+		//while (stopCount < 1000){
+		//	if (stop){
+		//		random = rand();
+		//		if (random % 4 == 0) curentY = 0, curentX = (rand() % (x / 2)) * 2;				//è„ÇÃï«Ç©ÇÁêLÇŒÇ∑
+		//		else if (random % 4 == 1) curentY = y - 1, curentX = (rand() % (x / 2)) * 2;	//â∫ÇÃï«
+		//		else if (random % 4 == 2) curentY = (rand() % (y / 2)) * 2, curentX = 0;		//ç∂ÇÃï«
+		//		else if (random % 4 == 3) curentY = (rand() % (y / 2)) * 2, curentX = x - 1;	//âEÇÃï«
+		//		stop = false;
+		//		stopCount++;
+		//	}
+		//	else{
+		//		random = rand();
+		//		if (random % 4 == 0 && curentY >= 2 && maze[curentY - 2][curentX] != 1){
+		//			maze[curentY - 2][curentX] = maze[curentY - 1][curentX] = 1;
+		//			curentY -= 2;
+		//		}
+		//		else if (random % 4 == 1 && curentY <= y - 3 && maze[curentY + 2][curentX] != 1){
+		//			maze[curentY + 2][curentX] = maze[curentY + 1][curentX] = 1;
+		//			curentY += 2;
+		//		}
+		//		else if (random % 4 == 2 && curentX >= 2 && maze[curentY][curentX - 2] != 1){
+		//			maze[curentY][curentX - 2] = maze[curentY][curentX - 1] = 1;
+		//			curentX -= 2;
+		//		}
+		//		else if (random % 4 == 3 && curentX <= x - 3 && maze[curentY][curentX + 2] != 1){
+		//			maze[curentY][curentX + 2] = maze[curentY][curentX + 1] = 1;
+		//			curentX += 2;
+		//		}
+		//		else stop = true;
+		//	}
+		//}
+		while (stopCount < 10000){
+			while (!select){
+				int randomY = (rand() % ((y + 1) / 2)) * 2;
+				int randomX = (rand() % ((x + 1) / 2)) * 2;
+				if (maze[randomY][randomX] == 1){
+					currentY = randomY;
+					currentX = randomX;
+					select = true;
+					stop_wall = false;
+				}
 			}
-			else{
-				random = rand();
-				if (random % 4 == 0 && curentY >= 2 && maze[curentY - 2][curentX] != 1){
-					maze[curentY - 2][curentX] = maze[curentY - 1][curentX] = 1;
-					curentY -= 2;
+			while (!stop_wall){
+				if (rand() % 4 == 0 && currentY >= 2 && maze[currentY - 2][currentX] != 1){
+					maze[currentY - 2][currentX] = maze[currentY - 1][currentX] = 1;
+					currentY -= 2;
 				}
-				else if (random % 4 == 1 && curentY <= y - 3 && maze[curentY + 2][curentX] != 1){
-					maze[curentY + 2][curentX] = maze[curentY + 1][curentX] = 1;
-					curentY += 2;
+				else if (rand() % 4 == 1 && currentY <= y - 3 && maze[currentY + 2][currentX] != 1){
+					maze[currentY + 2][currentX] = maze[currentY + 1][currentX] = 1;
+					currentY += 2;
 				}
-				else if (random % 4 == 2 && curentX >= 2 && maze[curentY][curentX - 2] != 1){
-					maze[curentY][curentX - 2] = maze[curentY][curentX - 1] = 1;
-					curentX -= 2;
+				else if (rand() % 4 == 2 && currentX >= 2 && maze[currentY][currentX - 2] != 1){
+					maze[currentY][currentX - 2] = maze[currentY][currentX - 1] = 1;
+					currentX -= 2;
 				}
-				else if (random % 4 == 3 && curentX <= x - 3 && maze[curentY][curentX + 2] != 1){
-					maze[curentY][curentX + 2] = maze[curentY][curentX + 1] = 1;
-					curentX += 2;
+				else if (rand() % 4 == 3 && currentX <= x - 3 && maze[currentY][currentX + 2] != 1){
+					maze[currentY][currentX + 2] = maze[currentY][currentX + 1] = 1;
+					currentX += 2;
 				}
-				else stop = true;
+				else{
+					stop_wall = true;
+					select = false;
+					stopCount++;
+				}
 			}
 		}
 		break;
